@@ -1,29 +1,17 @@
-name: Run COT Fetch
-
-on:
-  schedule:
-    - cron: '30 19 * * FRI'  # 3:30 PM ET = 19:30 UTC
-  workflow_dispatch:          # allows manual trigger
-
 jobs:
   run-cot-script:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          node-version: 22   # explicitly set to Node.js 22
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
-      - name: Install dependencies
-        run: |
-          pip install -r functions/requirements.txt
+          node-version: 22   # explicitly set to Node.js 22
 
       - name: Run script
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.FIREBASE_KEY }}
-        run: |
-          python functions/main.py
+        run: python main.py
