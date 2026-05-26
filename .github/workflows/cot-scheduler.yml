@@ -1,17 +1,30 @@
+name: Run COT Fetch
+
+on:
+  workflow_dispatch:   # manual trigger
+  schedule:
+    - cron: "0 12 * * 5"   # every Friday at 12:00 UTC
+
 jobs:
   run-cot-script:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          node-version: 22   # explicitly set to Node.js 22
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          node-version: 22   # explicitly set to Node.js 22
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Run script
+        env:
+          env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
         run: python main.py
